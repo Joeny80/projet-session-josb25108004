@@ -1,0 +1,16 @@
+# config.yaml — Configuration de l'application INF5190
+#
+# B1 : adresse courriel du destinataire des alertes de nouvelles contraventions
+email:
+  destinataire: admin@example.com
+  expediteur: noreply@inf5190.local
+  smtp_host: localhost
+  smtp_port: 1025
+  smtp_user: ""
+  smtp_password: ""
+
+# D4 : identifiants Basic Auth pour accès aux routes de modification D3
+# ...
+auth:
+  username: admin
+  password: "secret1234"

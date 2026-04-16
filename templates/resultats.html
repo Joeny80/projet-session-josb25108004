@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de recherche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="back-link" href="{{ url_for('afficher_accueil') }}">← Retour à l’accueil</a>
+            <h1>Résultats de recherche</h1>
+            <p class="subtitle">
+                Résultats correspondant à votre recherche de contraventions alimentaires.
+            </p>
+        </header>
+
+        {% if contraventions and contraventions|length > 0 %}
+            <div class="result-count">
+                {{ contraventions|length }} résultat{% if contraventions|length > 1 %}s{% endif %} trouvé{% if contraventions|length > 1 %}s{% endif %}
+            </div>
+
+            <section class="section">
+                <h2>Liste des contraventions</h2>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ID poursuite</th>
+                                <th>Business ID</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Adresse</th>
+                                <th>Date jugement</th>
+                                <th>Établissement</th>
+                                <th>Montant</th>
+                                <th>Propriétaire</th>
+                                <th>Ville</th>
+                                <th>Statut</th>
+                                <th>Date statut</th>
+                                <th>Catégorie</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in contraventions %}
+                            <tr>
+                                <td><code>{{ c[0] }}</code></td>
+                                <td>{{ c[1] or 'N/A' }}</td>
+                                <td>{{ c[2] or 'N/A' }}</td>
+                                <td>{{ c[3] or 'N/A' }}</td>
+                                <td>{{ c[4] or 'N/A' }}</td>
+                                <td>{{ c[5] or 'N/A' }}</td>
+                                <td>{{ c[6] or 'N/A' }}</td>
+                                <td>{{ c[7] or 'N/A' }}</td>
+                                <td>
+                                    {% if c[8] is not none %}
+                                        {{ c[8] }} $
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>{{ c[9] or 'N/A' }}</td>
+                                <td>{{ c[10] or 'N/A' }}</td>
+                                <td>{{ c[11] or 'N/A' }}</td>
+                                <td>{{ c[12] or 'N/A' }}</td>
+                                <td>{{ c[13] or 'N/A' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% else %}
+            <div class="no-results">
+                <h2>Aucun résultat trouvé</h2>
+                <p>
+                    Aucun établissement, propriétaire ou nom de rue ne correspond à votre recherche.
+                </p>
+                <p>
+                    Essayez avec un autre mot-clé ou retournez à l’accueil pour lancer une nouvelle recherche.
+                </p>
+                <div style="margin-top: 18px;">
+                    <a class="nav-links" href="{{ url_for('afficher_accueil') }}" style="text-decoration:none;">
+                        <span style="
+                            display:inline-block;
+                            background:#0f766e;
+                            color:white;
+                            padding:12px 18px;
+                            border-radius:12px;
+                            font-weight:700;
+                        ">
+                            Revenir à l’accueil
+                        </span>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

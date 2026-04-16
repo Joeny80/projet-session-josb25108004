@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faire une plainte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Faire une plainte</h1>
+            <p class="subtitle">Demande d’inspection alimentaire</p>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('afficher_accueil') }}">Accueil</a>
+                <a href="{{ url_for('afficher_documentation') }}">Documentation API</a>
+            </nav>
+        </header>
+
+        <main>
+            <div id="message" class="message"></div>
+
+            <section class="form-container">
+                <form id="plainte-form">
+                    <div class="form-group">
+                        <label for="in_nom_etablissement">
+                            Nom de l’établissement <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="in_nom_etablissement"
+                            required
+                            minlength="1"
+                            maxlength="200"
+                            placeholder="Ex: Restaurant Le Gourmet"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="in_adresse">
+                            Adresse <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="in_adresse"
+                            required
+                            minlength="1"
+                            maxlength="300"
+                            placeholder="Ex: 1234 Rue Sainte-Catherine"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="in_ville">
+                            Ville <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="in_ville"
+                            required
+                            minlength="1"
+                            maxlength="100"
+                            placeholder="Ex: Montréal"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="in_date_visite">
+                            Date de votre visite <span class="required">*</span>
+                        </label>
+                        <input type="date" id="in_date_visite" required>
+                        <p class="help-text">Format AAAA-MM-JJ</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="in_nom_prenom">
+                            Votre nom et prénom <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="in_nom_prenom"
+                            required
+                            minlength="1"
+                            maxlength="200"
+                            placeholder="Ex: Jean Dupont"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="in_description">
+                            Description du problème observé <span class="required">*</span>
+                        </label>
+                        <textarea
+                            id="in_description"
+                            required
+                            minlength="10"
+                            maxlength="2000"
+                            placeholder="Décrivez en détail le problème que vous avez observé..."
+                        ></textarea>
+                        <p class="help-text">Soyez aussi précis que possible.</p>
+                    </div>
+
+                    <button type="submit" id="submit-btn">Soumettre la plainte</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='d1.js') }}"></script>
+</body>
+</html>

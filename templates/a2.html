@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contraventions Alimentaires</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Contraventions Alimentaires</h1>
+            <p class="subtitle">Ville de Montréal — INF5190 Hiver 2026</p>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('afficher_accueil') }}">Accueil</a>
+                <a href="{{ url_for('afficher_plainte') }}">Faire une plainte</a>
+                <a href="{{ url_for('afficher_documentation') }}">Documentation API</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="section">
+                <h2>Recherche de contraventions</h2>
+                <form action="{{ url_for('traiter_recherche') }}" method="POST">
+                    <div class="form-group">
+                        <label for="search">Nom d’établissement, propriétaire ou rue</label>
+                        <input
+                            type="text"
+                            id="search"
+                            name="search"
+                            placeholder="Ex: Restaurant ABC, Jean Dupont, Boulevard Rosemont"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit">Chercher</button>
+                </form>
+            </section>
+
+            <section class="section">
+                <h2>Contraventions par période (A5)</h2>
+
+                <div class="date-range">
+                    <div class="form-group">
+                        <label for="date-du">Du</label>
+                        <input type="date" id="date-du" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date-au">Au</label>
+                        <input type="date" id="date-au" required>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" id="btn-a5">Chercher</button>
+                    </div>
+                </div>
+
+                <div id="resultats-a5"></div>
+            </section>
+
+            <section class="section">
+                <h2>Recherche par restaurant (A6)</h2>
+
+                <div class="form-group">
+                    <label for="select-restaurant">Sélectionner un restaurant</label>
+                    <select id="select-restaurant">
+                        <option value="">-- Choisir un restaurant --</option>
+                    </select>
+                </div>
+
+                <button type="button" id="btn-a6">Afficher les infractions</button>
+                <div id="resultats-a6"></div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-modifier" aria-hidden="true">
+        <div>
+            <h3>Modifier le contrevenant</h3>
+
+            <div class="form-group">
+                <label for="nouveau-nom">Nouveau nom</label>
+                <input type="text" id="nouveau-nom" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nouveau-proprietaire">Nouveau propriétaire</label>
+                <input type="text" id="nouveau-proprietaire" required>
+            </div>
+
+            <div class="form-group">
+                <label for="auth-user">Identifiant admin</label>
+                <input type="text" id="auth-user" value="admin">
+            </div>
+
+            <div class="form-group">
+                <label for="auth-pass">Mot de passe</label>
+                <input type="password" id="auth-pass">
+            </div>
+
+            <button type="button" id="btn-confirm-modif">Confirmer</button>
+            <button type="button" id="btn-cancel-modif">Annuler</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='a2.js') }}"></script>
+</body>
+</html>

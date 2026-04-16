@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation API</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Documentation API</h1>
+            <p class="subtitle">
+                Référence des services REST du projet Contraventions Alimentaires.
+            </p>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('afficher_accueil') }}">Accueil</a>
+                <a href="{{ url_for('afficher_plainte') }}">Faire une plainte</a>
+            </nav>
+        </header>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/contrevenants?du=YYYY-MM-DD&amp;au=YYYY-MM-DD</span>
+            </div>
+            <p class="description">
+                Retourne la liste des contraventions émises entre deux dates spécifiées.
+            </p>
+
+            <div class="section-title">Paramètres</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Requis</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>du</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Date de début au format YYYY-MM-DD</td>
+                    </tr>
+                    <tr>
+                        <td><code>au</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Date de fin au format YYYY-MM-DD</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Exemple</div>
+            <pre>GET /contrevenants?du=2022-05-08&amp;au=2024-05-15</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/restaurants</span>
+            </div>
+            <p class="description">
+                Retourne la liste distincte des établissements utilisés dans la recherche A6.
+            </p>
+
+            <div class="section-title">Exemple de réponse</div>
+            <pre>[
+  { "con_etablissement": "Restaurant ABC" },
+  { "con_etablissement": "Bistro XYZ" }
+]</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/contraventions?restaurant=Nom</span>
+            </div>
+            <p class="description">
+                Retourne toutes les infractions d’un restaurant spécifique.
+            </p>
+
+            <div class="section-title">Paramètres</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Requis</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>restaurant</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Nom de l’établissement ou partie du nom</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Exemple</div>
+            <pre>GET /api/contraventions?restaurant=Restaurant%20ABC</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/etablissements</span>
+            </div>
+            <p class="description">
+                Retourne les établissements triés par nombre d’infractions décroissant, en JSON.
+            </p>
+
+            <div class="section-title">Exemple de réponse</div>
+            <pre>[
+  { "con_etablissement": "Restaurant Problématique", "nombre_infraction": 15 },
+  { "con_etablissement": "Bistro XYZ", "nombre_infraction": 8 }
+]</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/etablissements.xml</span>
+            </div>
+            <p class="description">
+                Retourne les mêmes données que C1 au format XML UTF-8.
+            </p>
+
+            <div class="section-title">Exemple de réponse</div>
+            <pre>&lt;etablissements&gt;
+  &lt;item&gt;
+    &lt;con_etablissement&gt;Restaurant Problématique&lt;/con_etablissement&gt;
+    &lt;nombre_infraction&gt;15&lt;/nombre_infraction&gt;
+  &lt;/item&gt;
+&lt;/etablissements&gt;</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/etablissements.csv</span>
+            </div>
+            <p class="description">
+                Retourne les mêmes données que C1 au format CSV UTF-8.
+            </p>
+
+            <div class="section-title">Exemple de réponse</div>
+            <pre>con_etablissement,nombre_infraction
+Restaurant Problématique,15
+Bistro XYZ,8</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/api/inspection</span>
+            </div>
+            <p class="description">
+                Crée une nouvelle demande d’inspection. Le corps JSON est validé par schéma.
+            </p>
+
+            <div class="section-title">Corps JSON attendu</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Champ</th>
+                        <th>Type</th>
+                        <th>Requis</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nom_etablissement</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Nom de l’établissement</td>
+                    </tr>
+                    <tr>
+                        <td><code>adresse</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Adresse de l’établissement</td>
+                    </tr>
+                    <tr>
+                        <td><code>ville</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Ville</td>
+                    </tr>
+                    <tr>
+                        <td><code>date_visite</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Date de visite au format YYYY-MM-DD</td>
+                    </tr>
+                    <tr>
+                        <td><code>nom_prenom</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Nom du plaignant</td>
+                    </tr>
+                    <tr>
+                        <td><code>description</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Description du problème observé</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Exemple</div>
+            <pre>POST /api/inspection
+Content-Type: application/json
+
+{
+  "nom_etablissement": "Restaurant ABC",
+  "adresse": "123 rue Principale",
+  "ville": "Montréal",
+  "date_visite": "2024-06-15",
+  "nom_prenom": "Jean Dupont",
+  "description": "Présence de moisissures."
+}</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/api/inspection?nom=Nom&amp;date=YYYY-MM-DD</span>
+            </div>
+            <p class="description">
+                Supprime une demande d’inspection selon le nom de l’établissement et la date.
+            </p>
+
+            <div class="section-title">Paramètres</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Requis</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nom</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Nom de l’établissement</td>
+                    </tr>
+                    <tr>
+                        <td><code>date</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Date de visite au format YYYY-MM-DD</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Exemple</div>
+            <pre>DELETE /api/inspection?nom=Restaurant%20ABC&amp;date=2024-06-15</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method put">PUT</span>
+                <span class="path">/api/contrevenant/&lt;nom&gt;</span>
+            </div>
+            <p class="description">
+                Modifie le nom et le propriétaire d’un contrevenant. Cette route est protégée par Basic Auth.
+            </p>
+
+            <div class="auth-required">
+                Authentification requise avec HTTP Basic Auth.
+            </div>
+
+            <div class="section-title">Corps JSON attendu</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Champ</th>
+                        <th>Type</th>
+                        <th>Requis</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nouveau_nom</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Nouveau nom de l’établissement</td>
+                    </tr>
+                    <tr>
+                        <td><code>nouveau_proprietaire</code></td>
+                        <td>string</td>
+                        <td>Oui</td>
+                        <td>Nouveau propriétaire</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Exemple</div>
+            <pre>PUT /api/contrevenant/Ancien%20Nom
+Authorization: Basic base64(user:password)
+Content-Type: application/json
+
+{
+  "nouveau_nom": "Nouveau Nom",
+  "nouveau_proprietaire": "Nouveau Propriétaire"
+}</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/api/contrevenant/&lt;nom&gt;</span>
+            </div>
+            <p class="description">
+                Supprime logiquement toutes les contraventions d’un établissement. Cette route est aussi protégée par Basic Auth.
+            </p>
+
+            <div class="auth-required">
+                Authentification requise avec HTTP Basic Auth.
+            </div>
+
+            <div class="section-title">Exemple</div>
+            <pre>DELETE /api/contrevenant/Nom%20Etablissement
+Authorization: Basic base64(user:password)</pre>
+        </section>
+
+        <section class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">HTTP</span>
+                <span class="path">Codes de réponse</span>
+            </div>
+            <p class="description">
+                Codes HTTP principaux utilisés dans l’application.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>200 OK</td><td>Requête réussie</td></tr>
+                    <tr><td>201 Created</td><td>Ressource créée avec succès</td></tr>
+                    <tr><td>400 Bad Request</td><td>Paramètres ou corps invalides</td></tr>
+                    <tr><td>401 Unauthorized</td><td>Authentification requise</td></tr>
+                    <tr><td>404 Not Found</td><td>Ressource introuvable</td></tr>
+                    <tr><td>405 Method Not Allowed</td><td>Méthode non autorisée</td></tr>
+                    <tr><td>500 Internal Server Error</td><td>Erreur interne du serveur</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

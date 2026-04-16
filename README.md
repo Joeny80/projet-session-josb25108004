@@ -13,75 +13,98 @@ Application web Flask permettant de consulter et gérer les contraventions alime
 
 ---
 
-## Installation (obligatoire — environnement virtuel)
+## Auteur
 
-Le projet DOIT être exécuté dans un environnement virtuel Python.
+**Berny Joseph**  
+Code permanent: JOSB25108004  
+Cours: INF5190 - Programmation web avancée  
+Session: Hiver 2026
 
-```bash
-# 1) Créer l'environnement virtuel
-python3 -m venv venv
+---
 
-# 2) Activer
-# Linux/macOS
-source venv/bin/activate
-# Windows (PowerShell)
-venv\Scripts\Activate.ps1
+## Déploiement (F1) — Application en ligne
 
-# 3) Installer les dépendances
-pip install -r requirements.txt
+L'application est déployée et accessible directement sans installation :
 
-# 4) Initialiser la base de données (si nécessaire)
-sqlite3 db/database.db < db/db.sql
+**URL : https://joeny.pythonanywhere.com**
 
-# 5) Lancer
-export SECRET_KEY="dev-key"      # macOS/Linux
-set SECRET_KEY=dev-key           # Windows (cmd)
-$env:SECRET_KEY="dev-key"        # Windows (PowerShell)
+- Page d'accueil : https://joeny.pythonanywhere.com
+- Documentation API : https://joeny.pythonanywhere.com/doc
+- La base de données est déjà peuplée avec les données de la ville de Montréal
 
-python app.py
-```
+---
 
-## Installation Rapide
+## Installation locale (environnement virtuel obligatoire)
 
-### 1. Cloner et naviguer dans le projet
+### 1. Cloner le dépôt
 
 ```bash
-cd projet
+git clone https://github.com/Joeny80/projet-session-josb25108004.git
+cd projet-session-josb25108004
 ```
 
-### 2. Créer l'environnement virtuel
-
-```bash
-python3 -m venv venv
-```
-
-### 3. Activer l'environnement
+### 2. Créer et activer l'environnement virtuel
 
 **Linux/macOS:**
 ```bash
+python3 -m venv venv
 source venv/bin/activate
 ```
 
-**Windows:**
-```bash
-venv\Scripts\activate
+**Windows (PowerShell):**
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
 ```
 
-### 4. Installer les dépendances
+### 3. Installer les dépendances
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Lancer l'application
+### 4. Initialiser la base de données
+
+Un fichier `db/database.db` vide est fourni. Pour le recréer si nécessaire :
+
+```bash
+sqlite3 db/database.db < db/db.sql
+```
+
+### 5. Définir la clé secrète
+
+**Linux/macOS:**
+```bash
+export SECRET_KEY="dev-key"
+```
+
+**Windows (PowerShell):**
+```powershell
+$env:SECRET_KEY="dev-key"
+```
+
+**Windows (cmd):**
+```bash
+set SECRET_KEY=dev-key
+```
+
+### 6. Lancer l'application
 
 ```bash
 python app.py
 ```
 
-### 6. Ouvrir dans le navigateur
+### 7. Ouvrir dans le navigateur
 
 http://127.0.0.1:5000
+
+### 8. Importer les données (obligatoire au premier lancement)
+
+```bash
+python a1.py
+```
+
+Télécharge le CSV de la ville de Montréal et peuple la base de données.
 
 ---
 
@@ -110,7 +133,7 @@ http://127.0.0.1:5000
 - **D4:** Authentification Basic Auth sur les routes D3
 
 ### F - Déploiement
-- **F1:** Déploiement sur Render.com configuré
+- **F1:** Déploiement sur PythonAnywhere
 
 ---
 
@@ -127,12 +150,9 @@ projet/
 ├── inspection.py         # Modèle de données Inspection
 ├── correction.md         # Guide de correction détaillé
 ├── requirements.txt      # Dépendances Python
-├── runtime.txt           # Version Python
-├── Procfile              # Commande de démarrage
-├── render.yaml           # Configuration Render
 ├── db/
 │   ├── db.sql            # Script de création de la base
-│   └── database.db       # Base de données SQLite
+│   └── database.db       # Base de données SQLite vide
 └── templates/
     ├── a2.html           # Page d'accueil
     ├── d1.html           # Formulaire de plainte
@@ -172,11 +192,10 @@ auth:
 
 ---
 
-## API REST
+## API REST — Documentation complète
 
-### Documentation complète
-
-Accéder à: http://127.0.0.1:5000/doc
+- **Local :** http://127.0.0.1:5000/doc
+- **En ligne :** https://joeny.pythonanywhere.com/doc
 
 ### Endpoints principaux
 
@@ -193,21 +212,99 @@ Accéder à: http://127.0.0.1:5000/doc
 
 ---
 
-## Tests
+## Tests en ligne — PythonAnywhere
 
-### Tester l'importation (A1)
+### A4 — REST par dates
+
+```bash
+curl "https://joeny.pythonanywhere.com/contrevenants?du=2022-01-01&au=2024-12-31"
+```
+
+### C1 — JSON
+
+```bash
+curl https://joeny.pythonanywhere.com/api/etablissements
+```
+
+### C2 — XML
+
+```bash
+curl https://joeny.pythonanywhere.com/api/etablissements.xml
+```
+
+### C3 — CSV
+
+```bash
+curl https://joeny.pythonanywhere.com/api/etablissements.csv
+```
+
+### D1 — Création d'inspection
+
+```bash
+curl -X POST https://joeny.pythonanywhere.com/api/inspection \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nom_etablissement": "Restaurant ABC",
+    "adresse": "123 rue Principale",
+    "ville": "Montréal",
+    "date_visite": "2024-06-15",
+    "nom_prenom": "Jean Dupont",
+    "description": "Présence de moisissures"
+  }'
+```
+
+### D2 — Suppression d'inspection
+
+```bash
+curl -X DELETE "https://joeny.pythonanywhere.com/api/inspection?nom=Restaurant%20ABC&date=2024-06-15"
+```
+
+### D3 — Modifier un contrevenant (Basic Auth requis)
+
+```bash
+curl -X PUT https://joeny.pythonanywhere.com/api/contrevenant/NOM_ORIGINAL \
+  -u admin:secret1234 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nouveau_nom": "Nouveau Nom",
+    "nouveau_proprietaire": "Nouveau Propriétaire"
+  }'
+```
+
+### D3 — Supprimer un contrevenant (Basic Auth requis)
+
+```bash
+curl -X DELETE https://joeny.pythonanywhere.com/api/contrevenant/NOM_ORIGINAL \
+  -u admin:secret1234
+```
+
+### D4 — Validation Basic Auth
+
+```bash
+# Avec les bons identifiants → code 200
+curl -u admin:secret1234 https://joeny.pythonanywhere.com/api/contrevenant/NOM_ORIGINAL
+
+# Sans identifiants → code 401
+curl https://joeny.pythonanywhere.com/api/contrevenant/NOM_ORIGINAL
+```
+
+---
+
+## Tests locaux
+
+### A1 — Importation CSV
 
 ```bash
 python a1.py
 ```
 
-### Tester l'API (A4)
+### A4 — REST par dates
 
 ```bash
 curl "http://127.0.0.1:5000/contrevenants?du=2022-01-01&au=2024-12-31"
 ```
 
-### Tester la création d'inspection (D1)
+### D1 — Création d'inspection
 
 ```bash
 curl -X POST http://127.0.0.1:5000/api/inspection \
@@ -222,7 +319,7 @@ curl -X POST http://127.0.0.1:5000/api/inspection \
   }'
 ```
 
-### Tester la modification (D3/D4)
+### D3/D4 — Modifier avec authentification
 
 ```bash
 curl -X PUT http://127.0.0.1:5000/api/contrevenant/NOM \
@@ -240,36 +337,6 @@ python -m pycodestyle --max-line-length=79 *.py
 ```
 
 **Résultat attendu:** Aucune erreur
-
----
-
-## Déploiement (F1)
-
-Application déployée sur Render :  
-```
-https://TON-APP.onrender.com
-```
-
-## Déploiement (F1)
-
-### Sur Render.com
-
-1. Créer un compte sur https://render.com
-2. Créer un dépôt Git privé et pousser le code
-3. Sur Render: "New Web Service" → connecter le dépôt
-4. Configuration:
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `gunicorn app:app --bind 0.0.0.0:$PORT --workers 1`
-5. Déployer
-
----
-
-## Auteur
-
-**Berny Joseph**  
-Code permanent: JSC435667  
-Cours: INF5190 - Programmation web avancée  
-Session: Hiver 2026
 
 ---
 

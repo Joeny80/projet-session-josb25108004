@@ -4,10 +4,7 @@ let derniereRechercheAu = "";
 
 function afficherMessageDans(elementId, texte, type = "error") {
     const container = document.getElementById(elementId);
-    if (!container) {
-        return;
-    }
-
+    if (!container) return;
     container.innerHTML = `<div class="message ${type}">${texte}</div>`;
 }
 
@@ -28,7 +25,6 @@ function obtenirValeur(id) {
 function rechercherParDates() {
     const du = obtenirValeur("date-du");
     const au = obtenirValeur("date-au");
-    const resultats = document.getElementById("resultats-a5");
 
     if (!du || !au) {
         afficherMessageDans("resultats-a5", "Veuillez sélectionner les deux dates.");
@@ -49,18 +45,13 @@ function rechercherParDates() {
             afficherResultatsA5(data, du, au);
         })
         .catch(() => {
-            if (resultats) {
-                resultats.innerHTML = '<div class="message error">Erreur lors de la recherche.</div>';
-            }
+            afficherMessageDans("resultats-a5", "Erreur lors de la recherche.");
         });
 }
 
 function afficherResultatsA5(data, du, au) {
     const container = document.getElementById("resultats-a5");
-
-    if (!container) {
-        return;
-    }
+    if (!container) return;
 
     if (!Array.isArray(data) || data.length === 0) {
         container.innerHTML = `
@@ -134,23 +125,20 @@ function chargerRestaurants() {
     fetch("/api/restaurants")
         .then((response) => response.json())
         .then((data) => {
-            const select = document.getElementById("select-restaurant")
-                || document.getElementById("restaurant-select");
+            const select = document.getElementById("select-restaurant") ||
+                document.getElementById("restaurant-select");
 
-            if (!select || !Array.isArray(data)) {
-                return;
-            }
+            if (!select || !Array.isArray(data)) return;
 
             select.innerHTML = '<option value="">-- Choisir un restaurant --</option>';
 
             data.forEach((item) => {
-                if (!item.con_etablissement) {
-                    return;
-                }
+                const nom = item.con_etablissement || item.conetablissement;
+                if (!nom) return;
 
                 const option = document.createElement("option");
-                option.value = item.con_etablissement;
-                option.textContent = item.con_etablissement;
+                option.value = nom;
+                option.textContent = nom;
                 select.appendChild(option);
             });
         })
@@ -160,8 +148,8 @@ function chargerRestaurants() {
 }
 
 function rechercherRestaurant() {
-    const select = document.getElementById("select-restaurant")
-        || document.getElementById("restaurant-select");
+    const select = document.getElementById("select-restaurant") ||
+        document.getElementById("restaurant-select");
     const restaurant = select ? select.value.trim() : "";
 
     if (!restaurant) {
@@ -181,10 +169,7 @@ function rechercherRestaurant() {
 
 function afficherResultatsA6(data, restaurant) {
     const container = document.getElementById("resultats-a6");
-
-    if (!container) {
-        return;
-    }
+    if (!container) return;
 
     if (!Array.isArray(data) || data.length === 0) {
         container.innerHTML = `
@@ -241,24 +226,14 @@ function ouvrirModal(nom) {
     const champUser = document.getElementById("auth-user");
     const champPass = document.getElementById("auth-pass");
 
-    if (champNom) {
-        champNom.value = nom;
-    }
-
-    if (champProprietaire) {
-        champProprietaire.value = "";
-    }
-
-    if (champUser) {
-        champUser.value = "admin";
-    }
-
-    if (champPass) {
-        champPass.value = "";
-    }
+    if (champNom) champNom.value = nom;
+    if (champProprietaire) champProprietaire.value = "";
+    if (champUser) champUser.value = "admin";
+    if (champPass) champPass.value = "";
 
     if (modal) {
         modal.style.display = "block";
+        modal.setAttribute("aria-hidden", "false");
     }
 }
 
@@ -266,6 +241,7 @@ function fermerModal() {
     const modal = document.getElementById("modal-modifier");
     if (modal) {
         modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
     }
     nomOriginalModif = "";
 }
@@ -295,8 +271,8 @@ function confirmerModification() {
             "Authorization": `Basic ${btoa(`${user}:${pass}`)}`
         },
         body: JSON.stringify({
-            nouveau_nom: nouveauNom,
-            nouveau_proprietaire: nouveauProprietaire
+            nouveauNom: nouveauNom,
+            nouveauProprietaire: nouveauProprietaire
         })
     })
         .then((response) => {
@@ -362,21 +338,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnConfirm = document.getElementById("btn-confirm-modif");
     const btnCancel = document.getElementById("btn-cancel-modif");
 
-    if (btnA5) {
-        btnA5.addEventListener("click", rechercherParDates);
-    }
-
-    if (btnA6) {
-        btnA6.addEventListener("click", rechercherRestaurant);
-    }
-
-    if (btnConfirm) {
-        btnConfirm.addEventListener("click", confirmerModification);
-    }
-
-    if (btnCancel) {
-        btnCancel.addEventListener("click", fermerModal);
-    }
+    if (btnA5) btnA5.addEventListener("click", rechercherParDates);
+    if (btnA6) btnA6.addEventListener("click", rechercherRestaurant);
+    if (btnConfirm) btnConfirm.addEventListener("click", confirmerModification);
+    if (btnCancel) btnCancel.addEventListener("click", fermerModal);
 
     chargerRestaurants();
 });

@@ -5,7 +5,8 @@ import sqlite3
 from contravention import Contravention
 from inspection import Inspection
 
-DB_PATH = os.environ.get("DB_PATH", "db/database.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.environ.get("DB_PATH", os.path.join(BASE_DIR, "db", "database.db"))
 
 
 class Database:
